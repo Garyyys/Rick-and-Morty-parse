@@ -18,3 +18,5 @@ if __name__ == '__main__':
         print('loaded from api and saved to disk')
 
     characters = [Character(c['name'], c['species']) for c in characters]
+
+#nothing new
