@@ -1,3 +1,4 @@
+import cmd
 # Возьмите url для api данных сериала Рик и Морти
 url = 'https://rickandmortyapi.com/api/character/'
 
@@ -33,13 +34,39 @@ character = {
 
 
 class Character:
-    def __init__(self, name, species):
+    def __init__(self, name, species, status):
         self.name = name
         self.species = species
+        self.status = status
 
 
-rick = Character(name=character['name'], species=character['species'])
+class Aggregator:
+    def __init__(self, characters):
+        self.characters = characters
 
+    @staticmethod
+    def _is_equal(a, b):
+        if type(b) == dict:
+            b = b.get('name', '')
+
+        return a.lower() == b.lower()
+
+    def show(self, field, only_value=None):
+        result = {}
+
+        for c in self.characters:
+            value = getattr(c, field)
+
+            if only_value and not self._is_equal(only_value, value):
+                continue
+
+            result[value] = result.get(value, 0) + 1
+
+        if only_value and len(result.keys()) == 0:
+            print("{} 0".format(only_value))
+        else:
+            for k, v in result.items():
+                print("{} {}".format(k, v))
 
 # 4*. реализуйте класс Aggregator, который аттрибутом принимает список объектов персонажей и, на основании списка всех персонажей, может вывести на экран саггрегированную информацию:
 # подсказка: возможно, вам потребуется еще один класс, который запрос с клавиатуры конвертирует в объект запроса
